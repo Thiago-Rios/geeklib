@@ -46,20 +46,5 @@ public class GenreServiceTest {
         assertEquals(2, finalState);
     }
 
-    @Test
-    @DisplayName("Deve deletar generos")
-    public void testaDelete() {
-        Genre genre = new Genre();
-        genre.setName("Fantasia");
-        genreService.save(genre);
-        List<Genre> all = genreService.findAll();
-        int initState = all.size();
-        Genre genre2 =all.getFirst();
-        genreService.delete(genre2.getId());
-        all = genreService.findAll();
-        int finalState = all.size();
-        assertEquals(initState - 1, finalState);
-    }
-
 
 }

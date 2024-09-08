@@ -1,5 +1,6 @@
 package com.infnet.geeklib;
 
+import com.infnet.geeklib.filters.ProductFilters;
 import com.infnet.geeklib.model.Genre;
 import com.infnet.geeklib.model.Product;
 import com.infnet.geeklib.service.GenreService;
@@ -79,5 +80,61 @@ public class ProductServiceTest {
         assertTrue(byId.isPresent());
         Optional<Product> noProduct = productService.findById(-1);
         assertTrue(noProduct.isEmpty());
+    }
+
+    @Test
+    @DisplayName("Deve buscar um produto pelo nome")
+    public void testaPeloNOme() {
+        List<Product> result = productService.findAllByName("Eragon");
+        assertEquals(1, result.size());
+        List<Product> startsWithE = productService.findAllByNameContains("E");
+        assertEquals(2, startsWithE.size());
+    }
+
+    @Test
+    @DisplayName("Deve buscar os produtos pelo genero Fantasia")
+    public void testaPeloGenero() {
+        List<Product> result = productService.findAllFantasia();
+        assertEquals(2, result.size());
+    }
+
+    @Test
+    @DisplayName("Deve buscar produtos filtrando por nome e gênero")
+    public void testFindWithFiltersByNameAndGenre() {
+        ProductFilters filters = ProductFilters.builder()
+                .name(Optional.of("E"))
+                .genre(Optional.of("Fantasia"))
+                .author(Optional.empty())
+                .build();
+
+        List<Product> result = productService.findWithFilters(filters);
+        assertEquals(2, result.size());
+    }
+
+    @Test
+    @DisplayName("Deve buscar produtos filtrando apenas por gênero")
+    public void testFindWithFiltersByGenre() {
+        ProductFilters filters = ProductFilters.builder()
+                .name(Optional.empty())
+                .genre(Optional.of("Terror"))
+                .author(Optional.empty())
+                .build();
+
+        List<Product> result = productService.findWithFilters(filters);
+        assertEquals(1, result.size());
+        assertEquals("Jurrassic Park", result.get(0).getName());
+    }
+
+    @Test
+    @DisplayName("Deve buscar produtos filtrando por autor e gênero")
+    public void testFindWithFiltersByAuthor() {
+        ProductFilters filters = ProductFilters.builder()
+                .name(Optional.empty())
+                .genre(Optional.of("Fantasia"))
+                .author(Optional.of("Christopher Paolini"))
+                .build();
+
+        List<Product> result = productService.findWithFilters(filters);
+        assertEquals(2, result.size());
     }
 }

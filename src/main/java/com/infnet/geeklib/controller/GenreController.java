@@ -33,7 +33,7 @@ public class GenreController {
 
     @Operation(summary = "Pega genero pela ID")
     @GetMapping("/{id}")
-    public ResponseEntity<Genre> getProductById(@PathVariable Integer id) {
+    public ResponseEntity<Genre> getGenreById(@PathVariable Integer id) {
         Optional<Genre> genre = genreService.findById(id);
         return genre.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
@@ -41,20 +41,9 @@ public class GenreController {
 
     @Operation(summary = "Cria um novo genero")
     @PostMapping
-    public ResponseEntity<MessagePayload> createProduct(@RequestBody Genre genre) {
+    public ResponseEntity<MessagePayload> createGenre(@RequestBody Genre genre) {
         genreService.save(genre);
         return ResponseEntity.status(HttpStatus.CREATED).body(new MessagePayload("Criado com sucesso"));
-    }
-
-    @Operation(summary = "Delata um genero")
-    @DeleteMapping("/{id}")
-    public ResponseEntity<MessagePayload> deleteProduct(@PathVariable Integer id) {
-        try {
-            genreService.delete(id);
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(new MessagePayload("Deletado com sucesso"));
-        }catch (ResourceNotFoundException ex) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessagePayload(ex.getMessage()));
-        }
     }
 
 }

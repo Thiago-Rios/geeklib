@@ -8,6 +8,5 @@ import java.util.Optional;
 public interface GenreService {
     Optional<Genre> findById(Integer id);
     void save(Genre genre);
-    void delete(Integer id);
     List<Genre> findAll();
 }
